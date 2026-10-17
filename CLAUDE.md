@@ -40,6 +40,8 @@ Remotion project for vertical (1080×1920, 30fps) short-form video: AI dramas an
 
 ## Verify
 
+Cloud sessions run `.claude/hooks/session-start.sh` on startup (npm install + Remotion's headless Chrome), so these work immediately:
+
 - `npm run lint` (ESLint + tsc) must pass.
 - Spot-check frames: `npx remotion still DramaEpisode out/check.png --frame=110`.
 - Preview: `npm run dev` (Studio). Only run a full `npx remotion render` when the user asks for the final video.
