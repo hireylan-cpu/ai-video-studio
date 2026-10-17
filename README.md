@@ -1,83 +1,49 @@
-# Remotion video
+# AI Video Studio
 
-<p align="center">
-  <a href="https://github.com/remotion-dev/logo">
-    <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://github.com/remotion-dev/logo/raw/main/animated-logo-banner-dark.apng">
-      <img alt="Animated Remotion Logo" src="https://github.com/remotion-dev/logo/raw/main/animated-logo-banner-light.gif">
-    </picture>
-  </a>
-</p>
+Vertical short-form video with [Remotion](https://www.remotion.dev), set up for Claude Code to build and edit.
 
-Welcome to your Remotion project!
+- **DramaEpisode**: AI drama template: title card → shots with dialogue → "To be continued…", crossfaded.
+- **CaptionedVideo**: TikTok-style animated word captions over any clip (Whisper.cpp transcription).
 
-## Commands
-
-**Install Dependencies**
+## Quick start
 
 ```console
 npm i --loglevel=error
+npm run dev          # opens Remotion Studio preview
 ```
 
-**Start Preview**
+Render the episode:
 
 ```console
-npm run dev
+npx remotion render DramaEpisode out/episode.mp4
 ```
 
-**Render video**
+## Make an AI drama episode
+
+1. Generate vertical (9:16) clips for each shot and drop them into `public/drama/`.
+2. In `src/Drama/DramaEpisode.tsx`, set each shot's `clip={staticFile("drama/shot1.mp4")}`, `speaker` and `line`.
+3. Preview with `npm run dev`. You can also edit text, colors and clips in Studio's props panel.
+
+Or just ask Claude Code, e.g. *"Add a 4th shot where Daniel says 'Read it again.' using public/drama/shot4.mp4"*.
+
+## Make a captioned clip
 
 ```console
-npx remotion render
+npx remotion ffmpeg -ss 00:12:30 -to 00:13:15 -i long-video.mp4 -c copy public/clip.mp4
+node sub.mjs public/clip.mp4     # first run downloads Whisper.cpp + model
 ```
 
-**Upgrade Remotion**
+Then set the `CaptionedVideo` composition's `src` to `staticFile("clip.mp4")`. For non-English, change `WHISPER_MODEL` / `WHISPER_LANG` in `whisper-config.mjs`.
 
-```console
-npx remotion upgrade
-```
+## Claude Code skills (in `.claude/skills/`)
 
-## Captioning
+| Skill | Purpose |
+|---|---|
+| `remotion-*` (12 skills) | Official Remotion agent skills ([remotion-dev/skills](https://github.com/remotion-dev/skills)), version-matched to 4.0.536. Update with `npx skills update`. |
+| `source-driven-development` | From [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills) (MIT): makes Claude verify APIs against official docs before writing code. |
 
-Replace the `sample-video.mp4` with your video file.
-Caption all the videos in you `public` by running the following command:
-
-```console
-node sub.mjs
-```
-
-Only caption a specific video:
-
-```console
-node sub.mjs <path-to-video-file>
-```
-
-Only caption a specific folder:
-
-```console
-node sub.mjs <path-to-folder>
-```
-
-## Configure Whisper.cpp
-
-Captioning will download Whisper.cpp and the 1.5GB big `medium.en` model. To configure which model is being used, you can configure the variables in `whisper-config.mjs`.
-
-### Non-English languages
-
-To support non-English languages, you need to change the `WHISPER_MODEL` variable in `whisper-config.mjs` to a model that does not have a `.en` sufix.
-
-## Docs
-
-Get started with Remotion by reading the [fundamentals page](https://www.remotion.dev/docs/the-fundamentals).
-
-## Help
-
-We provide help on our [Discord server](https://remotion.dev/discord).
-
-## Issues
-
-Found an issue with Remotion? [File an issue here](https://github.com/remotion-dev/remotion/issues/new).
+`CLAUDE.md` tells Claude Code how this project is laid out and which skills to use.
 
 ## License
 
-Note that for some entities a company license is needed. [Read the terms here](https://github.com/remotion-dev/remotion/blob/main/LICENSE.md).
+Remotion requires a company license for organizations above 3 people: see [remotion.pro/license](https://www.remotion.pro/license). Bundled font: see `public/theboldfont-license.rtf`.
